@@ -28,9 +28,16 @@ public class WeatherContextTest
         .ToArray();
 
         context = new WeatherContext();
+
+        ClearDB();
     }
 
     [TestCleanup]
+    public void AfterEach()
+    {
+        ClearDB();
+    }
+
     public void ClearDB()
     {
         // delete all
@@ -40,11 +47,12 @@ public class WeatherContextTest
     }
 
     [TestMethod]
-    public void Path_Is_weatherDB()
+    public void Path_Is_Correct()
     {
         string path = context.DbPath;
-
-        Assert.AreEqual(path, "C:\\Users\\Thinkpad53u\\Files\\Dev\\99 ProjectIdeas\\consumablesBackend\\weather.db");
+        string? setInEnv = Environment.GetEnvironmentVariable("dbPath");
+        Assert.IsNotNull(setInEnv);
+        Assert.AreEqual(path, setInEnv);
     }
 
     [TestMethod]

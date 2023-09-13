@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 
 using consumablesBackend;
+using Microsoft.Extensions.Configuration.EnvironmentVariables;
 
 public class WeatherContext : DbContext
 {
@@ -12,7 +13,13 @@ public class WeatherContext : DbContext
 
     public WeatherContext()
     {
-        DbPath = "C:\\Users\\Thinkpad53u\\Files\\Dev\\99 ProjectIdeas\\consumablesBackend\\weather.db";
+        string? dbPath = Environment.GetEnvironmentVariable("dbPath");
+        if ( dbPath == null )
+        {
+            throw new Exception("dbPath not set in environment");
+        }
+
+        DbPath = dbPath;
     }
 
     // The following configures EF to create a Sqlite database file in the

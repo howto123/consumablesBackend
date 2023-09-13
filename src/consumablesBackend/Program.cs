@@ -24,4 +24,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+Console.WriteLine("The current Directory is: " + Directory.GetCurrentDirectory());
+
 app.Run();
