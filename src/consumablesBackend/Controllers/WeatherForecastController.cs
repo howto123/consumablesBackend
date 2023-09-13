@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace consumablesBackend.Controllers;
 
@@ -12,21 +13,30 @@ public class WeatherForecastController : ControllerBase
     };
 
     private readonly ILogger<WeatherForecastController> _logger;
+    private readonly WeatherContext _db;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, WeatherContext db)
     {
         _logger = logger;
+        _db = db;
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        var entries = Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             TemperatureC = Random.Shared.Next(-20, 55),
             Summary = Summaries[Random.Shared.Next(Summaries.Length)]
         })
         .ToArray();
+
+        Array.ForEach(entries, e => _db.AddRange(entries));
+
+        Console.WriteLine("called!");
+
+        return _db.WeatherForecasts.ToList();
+
     }
 }
