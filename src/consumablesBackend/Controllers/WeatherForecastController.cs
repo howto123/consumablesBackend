@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System;
 
 namespace consumablesBackend.Controllers;
 
@@ -21,7 +22,8 @@ public class WeatherForecastController : ControllerBase
         _db = db;
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
+    [HttpGet]
+    [Route("Init")]
     public IEnumerable<WeatherForecast> Get()
     {
         var entries = Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -32,11 +34,42 @@ public class WeatherForecastController : ControllerBase
         })
         .ToArray();
 
-        Array.ForEach(entries, e => _db.AddRange(entries));
+
+        // clear all
+        var all = _db.WeatherForecasts.Where( e => true ).AsEnumerable();
+        _db.WeatherForecasts.RemoveRange(all);
+        _db.SaveChanges();
+
+        // fresh init
+        _db.WeatherForecasts.AddRange(entries);
+        _db.SaveChanges();
+
+        // get all
+        var allFresh = _db.WeatherForecasts.Where( e => true ).AsEnumerable();
+
 
         Console.WriteLine("called!");
-
-        return _db.WeatherForecasts.ToList();
+        return allFresh;
 
     }
+
+    [HttpGet]
+    [Route("")]
+    public string AreWeRunning()
+    {
+        Console.WriteLine("Running!");
+        return "We are running!";
+    }
+
+    [HttpPost]
+    [Route("add")]
+    public WeatherForecast AddWeatherForecast([FromBody] WeatherForecast forecast)
+    {
+        _db.WeatherForecasts.Add(forecast);
+        _db.SaveChanges();
+
+        Console.WriteLine("Added!");
+        return forecast;
+    }
+
 }
