@@ -5,6 +5,7 @@
 
 app
 database
+notes.txt
 
 # User-specific files
 *.rsuser

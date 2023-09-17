@@ -3,7 +3,7 @@
 Entity Framework:
 https://learn.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli
 
-
+### be aware of these remarks
 set env
 `$env:dbPath="C:\\Users\\Thinkpad53u\\Files\\Dev\\99 ProjectIdeas\\consumablesBackend\\database\\weather.db"`
 create weather.db and set the absolute path in appsettings.json (and db context and in the test)
@@ -35,22 +35,15 @@ use the following format:
 
 ### docker locally
 `docker build -t backend .`
-`docker run -p 5000:5000 backend`
+`docker run --rm -e dbPath="blabla" -p 5000:80 backend`
+`docker run --rm -v ${pwd}/database:/app/database -e dbPath="./database/weather.db" -p 5000:80 backend`
 
+Set dockerignore as shown here: https://github.com/dotnet/sdk/issues/9921
+
+
+`... -it --entrypoint sh backend`
+
+Leave container shell: `exit`
 
 ### To do
 
-docker locally not running:
--
-You must install or update .NET to run this application.
-
-App: /app/consumablesBackend.dll
-Architecture: x64
-Framework: 'Microsoft.AspNetCore.App', version '7.0.0' (x64)
-.NET location: /usr/share/dotnet/
-
-No frameworks were found.
-
-Learn about framework resolution:
-https://aka.ms/dotnet/app-launch-failed
--

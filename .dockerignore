@@ -1,1 +1,6 @@
 database
+notes.txt
+**/bin
+**/obj
+**/.vscode
+**/.vs
